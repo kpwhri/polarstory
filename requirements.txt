@@ -1,0 +1,6 @@
+polars
+matplotlib
+plotly
+kaleido
+pytest
+pyarrow
