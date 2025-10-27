@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Polars](https://img.shields.io/badge/polars-latest-green.svg)](https://pola.rs/)
 
-A flexible Python library for generating beautiful reports from Polars dataframes with support for tables, plots, and multiple output formats.
+A flexible Python library for generating beautiful reports from polars dataframes with support for tables, plots, and multiple output formats.
 
 ## Features
 
