@@ -201,7 +201,7 @@ class Report:
     def md_path(self) -> Path:
         return self.out_dir / self.md_filename
 
-    def save_markdown(self) -> Path:
+    def to_markdown(self) -> str:
         content = []
         for i, part in enumerate(self._parts):
             part = part.rstrip()
@@ -209,7 +209,10 @@ class Report:
             # Ensure a single blank line between parts
             if i < len(self._parts) - 1:
                 content.append('')
-        self.md_path.write_text('\n'.join(content) + '\n', encoding='utf8')
+        return '\n'.join(content)
+
+    def save_markdown(self) -> Path:
+        self.md_path.write_text(self.to_markdown() + '\n', encoding='utf8')
         return self.md_path
 
     def _pick_pdf_engine(self) -> Optional[str]:
