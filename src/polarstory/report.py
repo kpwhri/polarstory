@@ -21,7 +21,7 @@ def _ensure_dir(p: Path) -> Path:
     return p
 
 
-def _pl_to_markdown_table(df, align_first_col_left: bool = True, formatters: dict[str|int, callable] = None) -> str:
+def _pl_to_markdown_table(df, align_first_col_left: bool = True, formatters: dict[str | int, callable] = None) -> str:
     """
     Render a Polars DataFrame (or any object exposing .columns and .rows()) to GitHub-style Markdown.
     """
@@ -221,7 +221,7 @@ class Report:
 
     def compile(self, output: Optional[Union[str, Path]] = None, to: Optional[str] = None,
                 pdf_engine: Optional[str] = None, extra_args: Optional[Iterable[str]] = None,
-                open_after = False, print_command_only = False) -> Path:
+                open_after=False, print_command_only=False, wsl_mount: str = None) -> Path:
         """
         Compile the Markdown to PDF/DOCX/HTML using Pandoc.
         - output: file path; extension decides the format (e.g., .pdf, .docx, .html).
@@ -230,8 +230,13 @@ class Report:
         - pdf_engine: override auto-detected engine (e.g., 'wkhtmltopdf', 'xelatex').
         - extra_args: additional Pandoc args as an iterable.
         - open_after: open the resulting file after compilation (OS default handler).
-        - print_command: instead of running, just print the command so it can be used in, e.g., wsl.
+        - print_command_only: instead of running, just print the command so it can be used in, e.g., wsl.
+        - wsl_mount: print command only, but do it for WSL (assmes on Windows) using specified mount (e.g., 'mnt')
         """
+        if wsl_mount:
+            print_command_only = True
+            if wsl_mount is True:
+                wsl_mount = 'mnt'
         if shutil.which('pandoc') is None and not print_command_only:
             raise RuntimeError('Pandoc is not installed or not on PATH. Install from https://pandoc.org/install.html')
 
@@ -247,12 +252,12 @@ class Report:
             to = output.suffix.lstrip('.').lower()
         elif output.suffix.lower() != f'.{to}':
             # Normalize output path to requested format
-            output = output.with_suffix('.' + to)
+            output = output.with_suffix(f'.{to}')
 
         # Build Pandoc command
-        cmd = ['pandoc', '-s', '--from', 'gfm', str(md_path), '-o', str(output)]
+        cmd = ['pandoc', '-s', '--from', 'gfm', wsl_str(md_path, wsl_mount), '-o', wsl_str(output, wsl_mount)]
         # Resource path so images are found
-        cmd += ['--resource-path', str(self.assets_dir)]
+        cmd += ['--resource-path', wsl_str(self.assets_dir, wsl_mount)]
         # Metadata
         cmd += ['-M', f'title={self.title}', '-M', f'author={self.author or ''}', '-M',
                 f'date={self.created:%Y-%m-%d %H:%M}']
@@ -285,3 +290,13 @@ class Report:
                     pass
 
         return output
+
+
+def wsl_str(path: Path, mnt='mnt'):
+    if mnt:
+        path = str(path.resolve())
+        drive = path[0].lower()
+        path_no_drive = path[2:].replace('\\', '/')
+        return f'/{mnt}/{drive}{path_no_drive}'
+    else:
+        return str(path)

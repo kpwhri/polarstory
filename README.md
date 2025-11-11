@@ -92,6 +92,12 @@ report.compile(to='pdf', pdf_engine='weasyprint', print_command_only=True)
 #        -M title=Test Report -M author=Test Author -M date=2025-11-11 12:11 
 #        --pdf-engine weasyprint
 
+# On Windows, if wanting to run under Windows, add the `wsl_mount` parameter, setting it to 'mnt'
+report.compile(to='pdf', pdf_engine='weasyprint', print_command_only=True, wsl_mount='mnt')
+# > pandoc -s --from gfm /mnt/c/.../report.md -o /mnt/c/.../test-report.pdf --resource-path /mnt/c/.../assets 
+#        -M title=Test Report -M author=Test Author -M date=2025-11-11 12:11 
+#        --pdf-engine weasyprint
+
 # Export to HTML
 report.compile(to='html')
 

@@ -152,3 +152,24 @@ def test_pdf_commandline(report, sample_df, capsys):
     assert ' '.join(cmd[15:17]) == f'-M date={today.year}-{today.month}-{today.day}'
     # cmd[17] is hour/minute which not be so stable
     assert ' '.join(cmd[18:20]) == '--pdf-engine weasyprint'
+
+
+def test_pdf_commandline_wsl(report, sample_df, capsys):
+    """Test command line output for report in pdf pandoc generation."""
+    report.compile(to='pdf', pdf_engine='weasyprint', print_command_only=True, wsl_mount='mnt')
+    today = datetime.today()
+    cmd = capsys.readouterr().out.split('\n')[0].split(' ')  # first line of stdout
+    assert ' '.join(cmd[0:4]) == 'pandoc -s --from gfm'
+    assert cmd[4].startswith('/mnt/')
+    assert cmd[4].endswith('report.md')
+    assert cmd[5] == '-o'
+    assert cmd[6].endswith('test-report.pdf')
+    assert cmd[6].startswith('/mnt/')
+    assert cmd[7] == '--resource-path'
+    assert cmd[8].endswith('assets')
+    assert cmd[8].startswith('/mnt/')
+    assert ' '.join(cmd[9:12]) == '-M title=Test Report'
+    assert ' '.join(cmd[12:15]) == '-M author=Test Author'
+    assert ' '.join(cmd[15:17]) == f'-M date={today.year}-{today.month}-{today.day}'
+    # cmd[17] is hour/minute which not be so stable
+    assert ' '.join(cmd[18:20]) == '--pdf-engine weasyprint'
