@@ -27,7 +27,7 @@ pip install -r requirements.txt
   - `kaleido`: Required for static plotly exports
 - `pandoc`: Required for PDF/DOCX/HTML export (system dependency)
 
-## Quick Start
+## Report Quick Start
 ```python
 import polars as pl
 from polarstory.report import Report
@@ -47,11 +47,13 @@ report.add_table('Sales by Category', df)
 report.save_markdown()
 
 # Or compile to PDF (requires pandoc)
-report.compile(to='pdf')
+report.compile(to='pdf')  # or docx, etc. (any format supported by pandoc
 ```
 ## Advanced Usage
 
-### Adding Plots
+### Report Features
+
+#### Adding Plots
 
 Add plots from matplotlib and plotly.
 
@@ -62,7 +64,7 @@ fig, ax = plt.subplots()
 ax.bar(df['category'], df['value'])
 report.add_plot(fig, caption='Sales Distribution')
 ```
-### Custom Formatting
+#### Custom Formatting
 ```python
 # Add custom markdown
 report.add_markdown('**Bold text** and *italics*')
@@ -73,7 +75,7 @@ report.add_image('path/to/image.png', width='80%')
 # Control heading levels
 report.add_heading('Important Section', level=2)
 ```
-## Export Options
+#### Export Options
 
 The report can be exported in various formats:
 
@@ -112,6 +114,33 @@ For Windows:
 * `weasyprint` can be installed using `wsl`:
   * `wsl.exe` then `apt install weasyprint`
   * Use the `print_command_only` option on `report.compile` to generate a command line to run.
+
+### Stat Features
+
+In addition to just building reports, there are a number of data analysis functions that are included within this package. The idea here is to quickly perform various manipulations, etc., in a Jupyter notebook (or similar), and then save the relevant ones to your report.
+
+#### Basic
+
+* `get_cumsum`: get cumulative sum of each columns, and add percentages
+```python
+df = pl.DataFrame({
+    'id': ['a', 'b', 'c', 'd', 'e', 'f'],
+    'col1': [1, 0, 1, 0, 1, 1],
+    'col2': [1, 1, 1, 0, 0, 0],
+    'col3': [0, 0, 0, 0, 0, 0],
+})
+
+cumsum_df = get_cumsum(cumsum_df.drop('id'))  # returns pl.DataFrame
+report.add_table('Counts of Columns', cumsum_df)  # add cumsum table to report
+markdown_text = get_cumsum(cumsum_df.drop('id'), as_markdown=True)
+print(markdown_text)
+# Output:
+# | labels   |   count | percent   |
+# |:---------|--------:|:----------|
+# | col1     |       4 | 66.67%    |
+# | col2     |       3 | 50.0%     |
+# | col3     |       0 | 0.0%      |
+```
 
 ## Development
 
