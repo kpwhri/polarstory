@@ -221,7 +221,7 @@ class Report:
 
     def compile(self, output: Optional[Union[str, Path]] = None, to: Optional[str] = None,
                 pdf_engine: Optional[str] = None, extra_args: Optional[Iterable[str]] = None,
-                open_after: bool = False) -> Path:
+                open_after = False, print_command_only = False) -> Path:
         """
         Compile the Markdown to PDF/DOCX/HTML using Pandoc.
         - output: file path; extension decides the format (e.g., .pdf, .docx, .html).
@@ -230,8 +230,9 @@ class Report:
         - pdf_engine: override auto-detected engine (e.g., 'wkhtmltopdf', 'xelatex').
         - extra_args: additional Pandoc args as an iterable.
         - open_after: open the resulting file after compilation (OS default handler).
+        - print_command: instead of running, just print the command so it can be used in, e.g., wsl.
         """
-        if shutil.which('pandoc') is None:
+        if shutil.which('pandoc') is None and not print_command_only:
             raise RuntimeError('Pandoc is not installed or not on PATH. Install from https://pandoc.org/install.html')
 
         md_path = self.save_markdown()
@@ -258,7 +259,7 @@ class Report:
 
         if to == 'pdf':
             engine = pdf_engine or self._pick_pdf_engine()
-            if engine is None:
+            if engine is None and not print_command_only:
                 raise RuntimeError(
                     'No PDF engine found. Install one of: wkhtmltopdf, weasyprint, or a LaTeX engine (xelatex/pdflatex).'
                 )
@@ -267,18 +268,20 @@ class Report:
         if extra_args:
             cmd += list(extra_args)
 
-        # Run Pandoc
-        subprocess.run(cmd, check=True)
+        if print_command_only:
+            print(' '.join(cmd))
+        else:  # run pandoc
+            subprocess.run(cmd, check=True)
 
-        if open_after:
-            try:
-                if os.name == 'nt':
-                    os.startfile(str(output))  # type: ignore[attr-defined]
-                elif os.name == 'posix':
-                    subprocess.Popen(['xdg-open', str(output)])
-                else:
-                    subprocess.Popen(['open', str(output)])
-            except Exception:
-                pass
+            if open_after:
+                try:
+                    if os.name == 'nt':
+                        os.startfile(str(output))  # type: ignore[attr-defined]
+                    elif os.name == 'posix':
+                        subprocess.Popen(['xdg-open', str(output)])
+                    else:
+                        subprocess.Popen(['open', str(output)])
+                except Exception:
+                    pass
 
         return output

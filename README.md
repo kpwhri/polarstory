@@ -76,6 +76,7 @@ report.add_heading('Important Section', level=2)
 ## Export Options
 
 The report can be exported in various formats:
+
 ```python
 # Save as Markdown
 report.save_markdown()
@@ -84,6 +85,10 @@ report.save_markdown()
 report.compile(to='pdf')
 report.compile(to='pdf', pdf_engine='miktex')
 report.compile(to='pdf', pdf_engine='weasyprint')
+
+# Alternatively: extract just the command line to run in a separate environment:
+report.compile(to='pdf', pdf_engine='weasyprint', print_command_only=True)
+# > 
 
 # Export to HTML
 report.compile(to='html')
