@@ -56,7 +56,7 @@ def _pl_to_markdown_table(df, align_first_col_left: bool = True, formatters: dic
                     curr_line.append(formatters[colname](value))
                 elif j in formatters:
                     curr_line.append(formatters[j](value))
-                elif dtypes[colname].startswith('Int'):
+                elif dtypes[colname].startswith('Int') or dtypes[colname].startswith('UInt'):
                     curr_line.append(default_formatters['round_int'](value))
                 elif dtypes[colname].startswith('Float'):
                     curr_line.append(default_formatters['round'](value))
