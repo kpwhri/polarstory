@@ -21,12 +21,21 @@ def _ensure_dir(p: Path) -> Path:
     return p
 
 
-def _pl_to_markdown_table(df, align_first_col_left: bool = True) -> str:
+def _pl_to_markdown_table(df, align_first_col_left: bool = True, formatters: dict[str|int, callable] = None) -> str:
     """
     Render a Polars DataFrame (or any object exposing .columns and .rows()) to GitHub-style Markdown.
     """
     headers = list(df.columns)
     rows = df.rows() if hasattr(df, 'rows') else []
+    default_formatters = {
+        'percent': lambda x: f'{x:,.2f}%',
+        'percent100': lambda x: f'{100 * x:,.2f}%',
+        'round': lambda x: f'{x:,.2f}',
+        'round_int': lambda x: f'{x:,}',
+    }
+    dtypes = {col: str(df[col].dtype) for col in df.columns}
+    formatters = formatters or dict()
+    formatters = {k: default_formatters.get(v, v) for k, v in formatters.items()}
     header_line = '| ' + ' | '.join(str(h) for h in headers) + ' |'
     aligns = []  # row alignment
     for i in range(len(headers)):
@@ -36,9 +45,25 @@ def _pl_to_markdown_table(df, align_first_col_left: bool = True) -> str:
             aligns.append('--:')
     sep_line = '| ' + ' | '.join(aligns) + ' |'
     lines = [header_line, sep_line]
-    # Rows
-    for row in rows:
-        lines.append('| ' + ' | '.join('' if v is None else str(v) for v in row) + ' |')
+
+    for i, row in enumerate(rows):
+        curr_line = []
+        for j, (value, colname) in enumerate(zip(row, headers)):
+            if value is None:
+                curr_line.append('')
+            else:  # check for special formatting
+                if colname in formatters:
+                    curr_line.append(formatters[colname](value))
+                elif j in formatters:
+                    curr_line.append(formatters[j](value))
+                elif dtypes[colname].startswith('Int'):
+                    curr_line.append(default_formatters['round_int'](value))
+                elif dtypes[colname].startswith('Float'):
+                    curr_line.append(default_formatters['round'](value))
+                else:
+                    curr_line.append(str(value))
+
+        lines.append('| ' + ' | '.join(curr_line) + ' |')
     return '\n'.join(lines)
 
 
@@ -172,13 +197,11 @@ class Report:
             f'\n\n{caption}' if caption else ''))
         return self
 
-    # OUTPUT
     @property
     def md_path(self) -> Path:
         return self.out_dir / self.md_filename
 
     def save_markdown(self) -> Path:
-        # Join parts ensuring blank line between blocks
         content = []
         for i, part in enumerate(self._parts):
             part = part.rstrip()
@@ -186,7 +209,7 @@ class Report:
             # Ensure a single blank line between parts
             if i < len(self._parts) - 1:
                 content.append('')
-        self.md_path.write_text('\n'.join(content) + '\n', encoding='utf-8')
+        self.md_path.write_text('\n'.join(content) + '\n', encoding='utf8')
         return self.md_path
 
     def _pick_pdf_engine(self) -> Optional[str]:

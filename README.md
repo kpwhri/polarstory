@@ -82,6 +82,8 @@ report.save_markdown()
 
 # Export to PDF
 report.compile(to='pdf')
+report.compile(to='pdf', pdf_engine='miktex')
+report.compile(to='pdf', pdf_engine='weasyprint')
 
 # Export to HTML
 report.compile(to='html')
@@ -89,6 +91,13 @@ report.compile(to='html')
 # Export to DOCX
 report.compile(to='docx')
 ```
+
+For exporting to `pdf`, some engine must be available
+
+For Windows:
+* `miktex` (https://miktex.org) is quite popular and can be downloaded; on first usage, it with guide through installation of required latex libraries
+* `weasyprint` can be installed using `wsl`:
+  * `wsl.exe` then `apt install weasyprint`
 
 ## Development
 
