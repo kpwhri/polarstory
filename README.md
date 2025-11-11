@@ -88,7 +88,9 @@ report.compile(to='pdf', pdf_engine='weasyprint')
 
 # Alternatively: extract just the command line to run in a separate environment:
 report.compile(to='pdf', pdf_engine='weasyprint', print_command_only=True)
-# > 
+# > pandoc -s --from gfm report.md -o test-report.pdf --resource-path assets 
+#        -M title=Test Report -M author=Test Author -M date=2025-11-11 12:11 
+#        --pdf-engine weasyprint
 
 # Export to HTML
 report.compile(to='html')
@@ -103,6 +105,7 @@ For Windows:
 * `miktex` (https://miktex.org) is quite popular and can be downloaded; on first usage, it with guide through installation of required latex libraries
 * `weasyprint` can be installed using `wsl`:
   * `wsl.exe` then `apt install weasyprint`
+  * Use the `print_command_only` option on `report.compile` to generate a command line to run.
 
 ## Development
 
