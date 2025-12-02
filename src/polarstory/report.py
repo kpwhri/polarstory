@@ -257,13 +257,12 @@ class Report:
             # Normalize output path to requested format
             output = output.with_suffix(f'.{to}')
 
-        # Build Pandoc command
         cmd = ['pandoc', '-s', '--from', 'gfm', wsl_str(md_path, wsl_mount), '-o', wsl_str(output, wsl_mount)]
-        # Resource path so images are found
+        # add resource path so images are found
         cmd += ['--resource-path', wsl_str(self.assets_dir, wsl_mount)]
-        # Metadata
-        cmd += ['-M', f'title={self.title}', '-M', f'author={self.author or ''}', '-M',
-                f'date={self.created:%Y-%m-%d %H:%M}']
+        # metadata
+        cmd += ['-M', f'title="{self.title}"', '-M', f'author="{self.author or ''}"', '-M',
+                f'date="{self.created:%Y-%m-%d %H:%M}"']
 
         if to == 'pdf':
             engine = pdf_engine or self._pick_pdf_engine()
