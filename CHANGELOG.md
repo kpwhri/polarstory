@@ -7,6 +7,8 @@ The versions below outline the intended release series. Release dates and versio
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-16
+
 ### Added
 
 - Right-click Windows integration for parquet files + tests
@@ -26,6 +28,7 @@ The versions below outline the intended release series. Release dates and versio
 - Standalone html reports with tables and charts
 - Dataset comparison, data-quality diagnostics, and cli
 
-[Unreleased]: https://github.com/kpwhri/polarstory/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/kpwhri/polarstory/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/kpwhri/polarstory/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/kpwhri/polarstory/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/kpwhri/polarstory/releases/tag/v1.0.0
