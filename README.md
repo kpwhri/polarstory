@@ -2,7 +2,8 @@
 
 **Data exploration with polars.**
 
-`polarstory` helps you understand a dataset, investigate individual variables, compare two extracts, and create standalone
+`polarstory` helps you understand a dataset, investigate individual variables, compare two extracts, and create
+standalone
 html reports. It works with `polars` DataFrames, LazyFrames, and parquet files.
 
 ## Installation
@@ -38,7 +39,8 @@ comparison.write_html('comparison.html')
 ```
 
 Reports are self-contained html files with static charts. You can open them in a browser, share them with colleagues, or
-print them to PDF. 
+print them to PDF. `polarstory` also provides command-line tools, a notebook explorer, and optional VS Code and Windows
+File Explorer integrations.
 
 ## Development
 
