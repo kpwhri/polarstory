@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <style>{{ stylesheet | safe }}</style>
+</head>
+<body>
+<main class="report">
+  <header class="report-header">
+    <p class="eyebrow">polarstory · Data exploration</p>
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<p class="subtitle">{{ subtitle }}</p>{% endif %}
+    <p class="generated">Generated {{ generated_at }}</p>
+  </header>
+  {% if sections | length > 1 %}
+  <nav class="toc" aria-label="Table of contents">
+    <h2>Contents</h2>
+    <ol>{% for section in sections %}<li><a href="#{{ section.id }}">{{ section.title }}</a></li>{% endfor %}</ol>
+  </nav>
+  {% endif %}
+  {% for section in sections %}
+  <section id="{{ section.id }}" class="report-section">
+    <h2>{{ section.title }}</h2>
+    {% for entry in section['items'] %}
+      <article id="{{ entry.item.id }}" class="report-item {{ entry.item.kind }}">
+        {% if entry.item.title %}<h3>{{ entry.item.title }}</h3>{% endif %}
+        {% if entry.item.caption %}<p class="caption">{{ entry.item.caption }}</p>{% endif %}
+        {{ entry.html | safe }}
+        {% if entry.item.notes %}<p class="notes">{{ entry.item.notes }}</p>{% endif %}
+      </article>
+    {% endfor %}
+  </section>
+  {% endfor %}
+  <footer>Created with polarstory. Review aggregated outputs before sharing.</footer>
+</main>
+</body>
+</html>
