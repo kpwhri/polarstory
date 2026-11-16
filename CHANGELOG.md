@@ -7,7 +7,13 @@ The versions below outline the intended release series. Release dates and versio
 
 ## [Unreleased]
 
+### Added
+
+- Right-click Windows integration for parquet files.
+
 ## [1.1.0] - 2026-11-16
+
+### Added
 
 - Integrate the VS Code polarstory extension into this repo (exclude from wheel)
 
