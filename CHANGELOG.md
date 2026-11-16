@@ -9,7 +9,7 @@ The versions below outline the intended release series. Release dates and versio
 
 ### Added
 
-- Right-click Windows integration for parquet files.
+- Right-click Windows integration for parquet files + tests
 
 ## [1.1.0] - 2026-11-16
 
