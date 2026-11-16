@@ -1,4 +1,4 @@
-# Building the documentation
+## Building the Documentation
 
 Run these commands from the **project root** (the directory containing `mkdocs.yml`).
 
@@ -18,4 +18,4 @@ python -m mkdocs build --strict
 
 The generated html is written to `site/`.
 
-For publishing, a github workflow is available at: `.github/workflows/build_docs.yml`.
+For publishing, a GitHub workflow is available at: `.github/workflows/build_docs.yml`.

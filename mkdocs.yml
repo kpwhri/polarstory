@@ -30,7 +30,6 @@ nav:
   - Dataset Comparison: reference/comparison/index.md
   - Quality Alerts: reference/alerts/index.md
   - CLI: reference/cli.md
-- Project Scope: project-scope.md
 - Documentation Deployment: documentation.md
 markdown_extensions:
 - fenced_code
@@ -66,3 +65,5 @@ not_in_nav: |
   /reference/inspect/*.md
   /reference/comparison/*.md
   /reference/alerts/*.md
+
+exclude_docs: /README.md

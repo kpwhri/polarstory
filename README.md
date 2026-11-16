@@ -42,6 +42,9 @@ Reports are self-contained html files with static charts. You can open them in a
 print them to PDF. `polarstory` also provides command-line tools, a notebook explorer, and optional VS Code and Windows
 File Explorer integrations.
 
+> **Working with research data?** Review reports for sensitive information and small cells before sharing. Examples in
+> the documentation use synthetic data.
+
 ## Development
 
 Run the project's tests with:
@@ -55,7 +58,3 @@ The [test guide](tests/README.md) describes the independent statistical referenc
 ## Documentation
 
 For guides, examples, and the API reference, visit **[polarstory documentation](https://kpwhri.github.io/polarstory/)**.
-
-
-> **Working with research data?** Review reports for sensitive information and small cells before sharing. Examples in
-> the documentation use synthetic data.

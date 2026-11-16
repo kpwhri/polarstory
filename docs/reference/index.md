@@ -25,4 +25,4 @@ Each public function or method has its **own reference page**. Signatures and do
 
 Examples assume `import polarstory as ps` and an existing polars dataframe named `df`, unless the snippet shows a file path.
 
-Signatures are generated from source using mkdocstrings. This makes documentation updates follow changes to Python functions without retyping parameters. See [documentation maintenance](../README.md).
+Signatures are generated from source using mkdocstrings. This makes documentation updates follow changes to Python functions without retyping parameters. See [documentation maintenance](../documentation.md).
