@@ -4,7 +4,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = 'polarstory'
-version = '1.0.0'
+version = '1.1.0'
 description = 'polars-native data profiling and static HTML reports'
 readme = 'README.md'
 requires-python = '>=3.11'
