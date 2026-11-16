@@ -6,6 +6,12 @@
 standalone
 html reports. It works with `polars` DataFrames, LazyFrames, and parquet files.
 
+
+## Documentation
+
+For guides, examples, and the API reference, visit **[polarstory documentation](https://kpwhri.github.io/polarstory/)**.
+
+
 ## Installation
 
 ```bash
@@ -54,7 +60,3 @@ python -m pytest -q
 ```
 
 The [test guide](tests/README.md) describes the independent statistical reference checks.
-
-## Documentation
-
-For guides, examples, and the API reference, visit **[polarstory documentation](https://kpwhri.github.io/polarstory/)**.
