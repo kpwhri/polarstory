@@ -1,0 +1,68 @@
+site_name: polarstory
+site_description: Polars-native data exploration and shareable HTML reports
+theme:
+  name: readthedocs
+nav:
+- Home: index.md
+- Getting Started: getting-started.md
+- Guides:
+  - Automatic Profiling: guides/profiling.md
+  - Explore Variables: guides/explorer.md
+  - Build a Report: guides/reports.md
+  - CLI and Integrations: guides/cli.md
+  - Saved Report Recipes: guides/recipes.md
+  - Compare Datasets: guides/comparing.md
+- Healthcare Research Examples:
+  - Cohort Overview: examples/cohort.md
+  - Cohort Characteristics (Table 1): examples/table1.md
+  - Missing Data Investigation: examples/missingness.md
+  - Quality and Privacy Checks: examples/quality.md
+  - Compare Extracts: examples/comparison.md
+- API Reference:
+  - Overview: reference/index.md
+  - Profiling: reference/profile/index.md
+  - Variable Explorer: reference/explorer/index.md
+  - Reports: reference/report/index.md
+  - Statistics and Diagnostics: reference/stats/index.md
+  - Static Plots: reference/plots/index.md
+  - Variable Metadata: reference/variables/index.md
+  - Parquet Inspection: reference/inspect/index.md
+  - Dataset Comparison: reference/comparison/index.md
+  - Quality Alerts: reference/alerts/index.md
+  - CLI: reference/cli.md
+- Project Scope: project-scope.md
+- Documentation Deployment: documentation.md
+markdown_extensions:
+- fenced_code
+- tables
+- toc:
+    permalink: true
+extra_css:
+- assets/extra.css
+plugins:
+- search
+- mkdocstrings:
+    default_handler: python
+    handlers:
+      python:
+        paths:
+        - src
+        options:
+          show_source: false
+          show_root_heading: true
+          show_root_full_path: false
+          separate_signature: true
+          show_signature_annotations: true
+          members: false
+
+# detailed API pages are linked from category indexes instead of the main sidebar
+not_in_nav: |
+  /reference/profile/*.md
+  /reference/explorer/*.md
+  /reference/report/*.md
+  /reference/stats/*.md
+  /reference/plots/*.md
+  /reference/variables/*.md
+  /reference/inspect/*.md
+  /reference/comparison/*.md
+  /reference/alerts/*.md

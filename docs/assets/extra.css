@@ -1,0 +1,8 @@
+/* small readability adjustments; keep the built-in theme */
+.wy-nav-content { max-width: 960px; }
+.rst-content table.docutils, .rst-content table.field-list { width: 100%; }
+.rst-content table.docutils td, .rst-content table.docutils th { white-space: normal; vertical-align: top; }
+.rst-content pre { font-size: .9em; }
+.rst-content h2 { margin-top: 1.7em; }
+.rst-content h3 { margin-top: 1.4em; }
+.rst-content code { overflow-wrap: anywhere; }

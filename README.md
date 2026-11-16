@@ -52,5 +52,10 @@ python -m pytest -q
 
 The [test guide](tests/README.md) describes the independent statistical reference checks.
 
+## Documentation
+
+For guides, examples, and the API reference, visit **[polarstory documentation](https://kpwhri.github.io/polarstory/)**.
+
+
 > **Working with research data?** Review reports for sensitive information and small cells before sharing. Examples in
 > the documentation use synthetic data.
