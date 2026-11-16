@@ -1,18 +1,24 @@
 # Changelog
 
-Notable changes to `polarstory` are recorded here, following [Keep a Changelog](https://keepachangelog.com/) and [Semantic Versioning](https://semver.org/).
+Notable changes to `polarstory` are recorded here, following [Keep a Changelog](https://keepachangelog.com/)
+and [Semantic Versioning](https://semver.org/).
 
 The versions below outline the intended release series. Release dates and version links will be added when published.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-16
+
+- Integrate the VS Code polarstory extension into this repo (exclude from wheel)
+
 ## [1.0.0] - 2026-11-16
 
 ### Added
 
-- polars-native dataset profiling, variable exploration, and descriptive statistics
+- polars dataset profiling, variable exploration, and descriptive statistics
 - Standalone html reports with tables and charts
 - Dataset comparison, data-quality diagnostics, and cli
 
-
+[Unreleased]: https://github.com/kpwhri/polarstory/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/kpwhri/polarstory/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/kpwhri/polarstory/releases/tag/v1.0.0
