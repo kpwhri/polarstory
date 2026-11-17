@@ -24,7 +24,7 @@ def test_file_backed_profile_stays_lazy_and_exports_html(tmp_path):
 
     output = p.write_html(tmp_path / 'profile.html')
     html = output.read_text(encoding='utf8')
-    assert 'Variable inventory' in html
+    assert 'Variable Inventory' in html
     assert '12,000' in html
     assert '<script' not in html
     assert '@media print' in html

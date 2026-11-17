@@ -12,7 +12,7 @@ def test_profile_item_is_lazy_reusable_and_cached(df):
     assert item.kind == 'table'
     assert item is profile.item('age', 'summary')
     assert set(profile._metrics) == {'age'}
-    assert profile.item('overview').title == 'Dataset overview'
+    assert profile.item('overview').title == 'Dataset Overview'
     assert profile.item('enctype', 'frequency') is profile.item('enctype', 'summary')
     assert profile.item('missingness').kind == 'table'
 
@@ -45,5 +45,5 @@ def test_profile_dataset_component_names_do_not_hide_real_columns():
     df = pl.DataFrame({'overview': ['A', 'B'], 'alerts': [1, 2]})
     p = ps.profile(df, mode='quick')
     assert p.item('overview', 'frequency').kind == 'table'
-    assert p.item('@overview').title == 'Dataset overview'
-    assert p.item('@alerts').title == 'Data-quality alerts'
+    assert p.item('@overview').title == 'Dataset Overview'
+    assert p.item('@alerts').title == 'Data Quality Alerts'

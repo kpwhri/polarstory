@@ -7,6 +7,10 @@ The versions below outline the intended release series. Release dates and versio
 
 ## [Unreleased]
 
+### Added
+
+- Don't open a window when right-click launching in Windows, attempt error handling if fails (e.g., non-parquet file)
+
 ## [1.2.0] - 2026-11-16
 
 ### Added

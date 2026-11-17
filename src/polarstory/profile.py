@@ -14,8 +14,8 @@ from matplotlib.figure import Figure
 from polarstory import alerts as quality_alerts, plots, stats
 from polarstory.columns import ColumnSelection, dtype_kind, select_columns
 from polarstory.metrics import collect_metrics
-from polarstory.source import DataInput, DataSource, as_source
 from polarstory.report import Report, ReportItem
+from polarstory.source import DataInput, DataSource, as_source
 from polarstory.variables import Variable, Variables
 
 
@@ -103,9 +103,7 @@ class VariableProfile:
 
 def _identifier_name(name: str) -> bool:
     lower = name.lower()
-    return lower in ('id', 'key', 'uuid', 'guid') or lower.endswith(
-        ('_id', '_key', '_uuid', '_guid')
-    )
+    return lower in ('id', 'key', 'uuid', 'guid') or lower.endswith(('_id', '_key', '_uuid', '_guid'))
 
 
 class Profile:
@@ -457,9 +455,9 @@ class Profile:
                 return self._report_items[cache_key]
             labels = {col: meta.label or col for col, meta in self.metadata.items()}
             if global_name == 'overview':
-                result = ReportItem('table', 'Dataset overview', self.overview)
+                result = ReportItem('table', 'Dataset Overview', self.overview)
             elif global_name == 'inventory':
-                result = ReportItem('table', 'Variable inventory', self.inventory)
+                result = ReportItem('table', 'Variable Inventory', self.inventory)
             elif global_name == 'missingness':
                 shown = self.missingness
                 if labels:
@@ -468,18 +466,18 @@ class Profile:
                 if normalized == 'chart':
                     if not self.options.charts or self.mode == 'quick':
                         raise ValueError('Missingness chart unavailable in this profile')
-                    result = ReportItem('chart', 'Null percentages', plots.missingness(rows=shown))
+                    result = ReportItem('chart', 'Null Percentages', plots.missingness(rows=shown))
                 else:
-                    result = ReportItem('table', 'Missing values by column', shown)
+                    result = ReportItem('table', 'Missing Values by Column', shown)
             elif global_name == 'alerts':
                 found = quality_alerts.to_frame(self.alerts)
                 if labels:
                     found = found.with_columns(pl.col('column').replace_strict(
                         labels, default=pl.col('column')))
-                result = ReportItem('table', 'Data-quality alerts', found)
+                result = ReportItem('table', 'Data Quality Alerts', found)
             elif global_name == 'missingness_patterns':
                 result = ReportItem(
-                    'table', 'Common missingness patterns',
+                    'table', 'Common Missingness Patterns',
                     stats.missingness_patterns(
                         self.source, self.columns,
                         top_n=self.options.max_pattern_rows,
@@ -489,14 +487,14 @@ class Profile:
             elif global_name == 'missingness_associations':
                 if normalized == 'chart':
                     result = ReportItem(
-                        'chart', 'Missingness association heatmap',
+                        'chart', 'Missingness Association Heatmap',
                         plots.missingness_associations(
                             self.item('@missingness_associations').content,
                         ), caption='Phi coefficient for null indicators; gray cells are undefined',
                     )
                 else:
                     result = ReportItem(
-                        'table', 'Associations between missing values',
+                        'table', 'Associations between Missing Values',
                         stats.missingness_associations(
                             self.source, self.columns,
                             max_columns=self.options.max_missingness_columns,
@@ -504,14 +502,14 @@ class Profile:
                     )
             elif global_name == 'uniqueness':
                 result = ReportItem(
-                    'table', 'Variable uniqueness',
+                    'table', 'Variable Uniqueness',
                     stats.uniqueness(self.source, self.columns,
                                      max_columns=self.options.max_duplicate_columns),
                     caption='Approximate non-null distinct counts; estimates may be imprecise',
                 )
             else:
                 result = ReportItem(
-                    'table', 'Exact duplicate rows',
+                    'table', 'Exact Duplicate Rows',
                     stats.duplicates(self.source, max_columns=self.options.max_duplicate_columns),
                     caption='Duplicate rows are excess repeats, not necessarily data errors',
                 )
@@ -546,7 +544,7 @@ class Profile:
             cache_key = (name, 'category_diagnostics')
             if cache_key not in self._report_items:
                 result = ReportItem(
-                    'table', f'{label} — category diagnostics',
+                    'table', f'{label} — Category Diagnostics',
                     stats.categorical_diagnostics(
                         self.source, name,
                         rare_at_most=self.options.rare_category_max_count,
@@ -563,7 +561,7 @@ class Profile:
             cache_key = (name, 'outliers')
             if cache_key not in self._report_items:
                 result = ReportItem(
-                    'table', f'{label} — IQR outlier summary',
+                    'table', f'{label} — IQR Outlier Summary',
                     stats.outliers(self.source, name, summary=var.table),
                     caption='Descriptive IQR rule; flagged observations are not necessarily errors',
                 )
@@ -586,7 +584,7 @@ class Profile:
                     self.source, name, top_n=self.options.max_categories,
                     include_null=self.options.include_null,
                 )
-                item = ReportItem('table', f'{label} — frequency', counts,
+                item = ReportItem('table', f'{label} — Frequency', counts,
                                   caption=f'polars dtype: {var.dtype}')
                 self._report_items[cache_key] = self._with_recipe(item, name, 'frequency')
             return self._report_items[cache_key]
@@ -611,7 +609,7 @@ class Profile:
                 caption += ' · Text classification based on a preview (up to 128 rows)'
             if meta.sensitive and not self.options.include_sensitive:
                 caption += ' · Sensitive variable: distribution suppressed'
-            result = ReportItem('table', f'{label} — {var.kind} summary', shown, caption=caption)
+            result = ReportItem('table', f'{label} — {var.kind} Summary', shown, caption=caption)
         result = self._with_recipe(result, name, normalized)
         self._report_items[cache_key] = result
         return result

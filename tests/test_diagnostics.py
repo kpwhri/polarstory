@@ -105,16 +105,16 @@ def test_full_profile_exposes_new_components(df):
     assert p.duplicates().kind == 'table'
     assert p.outliers('age').kind == 'table'
     titles = {item.title for item in p.items()}
-    assert 'Common missingness patterns' in titles
-    assert 'Exact duplicate rows' in titles
-    assert 'Variable uniqueness' in titles
+    assert 'Common Missingness Patterns' in titles
+    assert 'Exact Duplicate Rows' in titles
+    assert 'Variable Uniqueness' in titles
 
 
 def test_diagnostics_not_run_in_quick_mode(df):
     p = ps.profile(df, mode='quick')
     titles = {item.title for item in p.items()}
-    assert 'Exact duplicate rows' not in titles
-    assert 'Common missingness patterns' not in titles
+    assert 'Exact Duplicate Rows' not in titles
+    assert 'Common Missingness Patterns' not in titles
     assert p.outliers('age').kind == 'table'
 
 
@@ -122,7 +122,7 @@ def test_file_backed_diagnostic_recipes_round_trip(tmp_path):
     path = tmp_path / 'data.parquet'
     pl.DataFrame({'a': [1, 1, 2, None], 'b': ['x', 'x', None, 'y']}).write_parquet(path)
     profile = ps.profile(path, mode='full')
-    report = ps.Report('Diagnostic findings')
+    report = ps.Report('Diagnostic Findings')
     report.add(profile.missingness_patterns())
     report.add(profile.duplicates())
     report.add(profile.uniqueness())
@@ -197,7 +197,7 @@ def test_complex_duplicate_types_are_omitted_in_full_profile():
 def test_full_profile_includes_category_diagnostics(df):
     p = ps.profile(df, mode='full')
     titles = [item.title for item in p.items()]
-    assert any('category diagnostics' in title for title in titles)
+    assert any('Category Diagnostics' in title for title in titles)
 
 
 def test_cli_full_mode(tmp_path):
@@ -208,6 +208,6 @@ def test_cli_full_mode(tmp_path):
     pl.DataFrame({'score': [1., 2., 3., 100.], 'status': ['Y', 'Y', 'N', 'U']}).write_parquet(file_path)
     assert main(['profile', str(file_path), '--mode', 'full', '-o', str(output)]) == 0
     html = output.read_text(encoding='utf8')
-    assert 'Common missingness patterns' in html
-    assert 'IQR outlier summary' in html
+    assert 'Common Missingness Patterns' in html
+    assert 'IQR Outlier Summary' in html
     assert '<script' not in html

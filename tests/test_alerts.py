@@ -21,5 +21,5 @@ def test_alerts_invalid_threshold(df):
 
 def test_profile_alerts_in_report(df):
     result = ps.profile(df, mode='quick', options=ps.ProfileOptions(missing_threshold=0.1))
-    assert any(item.title == 'Data-quality alerts' for item in result.items())
+    assert any(item.title == 'Data Quality Alerts' for item in result.items())
     assert '<script' not in result.to_html()

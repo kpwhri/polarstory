@@ -64,7 +64,7 @@ def test_inventory_contains_types_and_labels(df):
     value = next(v for v in inventory.to_dicts() if v['column'] == 'enctype')
     assert value['label'] == 'Encounter type'
     assert p.item('@inventory').kind == 'table'
-    assert 'Variable inventory' in p.to_html()
+    assert 'Variable Inventory' in p.to_html()
 
 
 def test_frequency_numeric_replays_from_parquet(tmp_path):
