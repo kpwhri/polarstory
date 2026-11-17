@@ -10,6 +10,8 @@ nav:
   - Explore Variables: guides/explorer.md
   - Build a Report: guides/reports.md
   - CLI and Integrations: guides/cli.md
+  - MacOS Finder Integration: guides/macos.md
+  - Linux File Manager Integration: guides/linux.md
   - Saved Report Recipes: guides/recipes.md
   - Compare Datasets: guides/comparing.md
 - Healthcare Research Examples:
