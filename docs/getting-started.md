@@ -2,19 +2,19 @@
 
 ## Install
 
-For this development release, install from the source checkout in the Python environment used by VS Code:
+Install `polarstory` from pypi:
 
 ```powershell
-python -m pip install -e .
+python -m pip install polarstory
 ```
 
 To use the notebook explorer:
 
 ```powershell
-python -m pip install -e ".[notebook]"
+python -m pip install polarstory[notebook]
 ```
 
-The notebook interface is optional. Automatic reports and the CLI do not require it. After publication on PyPI, installation with `python -m pip install polarstory` can be used instead.
+The notebook interface is optional. Automatic reports and the CLI do not require it.
 
 ## Profile a parquet file
 
