@@ -7,6 +7,8 @@ import pytest
 
 from polarstory.integrations import windows
 
+pytestmark = pytest.mark.skipif(sys.platform != 'win32', reason='Windows File Explorer integration')
+
 
 def test_shell_command_quotes_selected_file(tmp_path):
     config = tmp_path / 'polarstory.toml'
@@ -31,8 +33,10 @@ def test_windows_registry_install_remove_does_not_touch_file_associations(monkey
     class Key:
         def __init__(self, name):
             self.name = name
+
         def __enter__(self):
             return self
+
         def __exit__(self, *exc):
             pass
 
@@ -79,8 +83,6 @@ def test_windows_registry_install_remove_does_not_touch_file_associations(monkey
     assert not any(k.startswith(base) for k in entries)
 
 
-
-
 def test_windowed_command_uses_pythonw_and_escapes_paths(tmp_path):
     folder = tmp_path / 'Python with spaces'
     folder.mkdir()
@@ -97,7 +99,6 @@ def test_windowed_command_uses_pythonw_and_escapes_paths(tmp_path):
     assert '-m polarstory.integrations.windows run advanced "%1"' in result
     assert f'--config "{config}"' in result
     assert ' -m polarstory diagnose ' not in result
-
 
 
 def test_windowed_command_falls_back_to_python(tmp_path):
@@ -137,7 +138,6 @@ def test_windowed_launcher_calls_existing_cli(monkeypatch, capsys, action, expec
     assert invoked == [expected]
     assert capsys.readouterr().out == ''
     assert capsys.readouterr().err == ''
-
 
 
 def test_windowed_launcher_passes_config_to_cli(monkeypatch, tmp_path):
@@ -187,7 +187,6 @@ def test_windowed_launcher_reports_failures(monkeypatch, tmp_path, kind):
     assert dialogs[0][0]
 
 
-
 def test_window_error_log_rotates_when_large(monkeypatch, tmp_path):
     monkeypatch.setenv('LOCALAPPDATA', str(tmp_path))
     folder = tmp_path / 'polarstory'
@@ -199,7 +198,6 @@ def test_window_error_log_rotates_when_large(monkeypatch, tmp_path):
     assert (folder / 'windows.previous.log').exists()
     assert 'sample error' in log.read_text(encoding='utf8')
     assert log.stat().st_size < 1024 * 1024
-
 
 
 def test_registry_install_uses_windowed_launcher(monkeypatch, tmp_path):
