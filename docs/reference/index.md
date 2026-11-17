@@ -18,7 +18,7 @@ Each public function or method has its **own reference page**. Signatures and do
 ## Conventions
 
 - **Inputs:** polars DataFrame, LazyFrame, or supported local parquet source, unless the method specifies otherwise
-- **Tables:** polars DataFrames containing descriptive results, not automatically manuscript-ready tables
+- **Tables:** polars DataFrames containing descriptive results
 - **Charts:** Static Matplotlib figures, rendered as SVG in HTML reports
 - **Report components:** `ReportItem` objects can be added with `Report.add()`
 - **Privacy:** Aggregates may still disclose small cells or identifying categories; review outputs before sharing
