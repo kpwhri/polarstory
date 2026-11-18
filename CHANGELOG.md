@@ -7,6 +7,8 @@ The versions below outline the intended release series. Release dates and versio
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-11-17
+
 ### Added
 
 - Don't open a window when right-click launching in Windows, attempt error handling if fails (e.g., non-parquet file)
@@ -38,7 +40,8 @@ The versions below outline the intended release series. Release dates and versio
 - Standalone html reports with tables and charts
 - Dataset comparison, data-quality diagnostics, and cli
 
-[Unreleased]: https://github.com/kpwhri/polarstory/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/kpwhri/polarstory/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/kpwhri/polarstory/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/kpwhri/polarstory/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/kpwhri/polarstory/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/kpwhri/polarstory/releases/tag/v1.0.0

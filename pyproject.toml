@@ -4,7 +4,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = 'polarstory'
-version = '1.2.0'
+version = '1.2.1'
 description = 'Data exploration and profiling with polars'
 readme = 'README.md'
 requires-python = '>=3.11'
@@ -17,6 +17,10 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     'pytest>=8',
+]
+notebook = [
+    'ipywidgets>=8',
+    'ipython>=8',
 ]
 
 [project.scripts]
