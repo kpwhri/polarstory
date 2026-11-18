@@ -11,6 +11,11 @@ The versions below outline the intended release series. Release dates and versio
 
 - Don't open a window when right-click launching in Windows, attempt error handling if fails (e.g., non-parquet file)
 - Theoretical integration with MacOS and linux + docs
+- `Report.add_chart` accepts `plotnine` and `altair` plots
+
+### Fixed
+
+- Prevent Variable Explorer from interacting with VS Code themes
 
 ## [1.2.0] - 2026-11-16
 

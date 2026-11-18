@@ -15,6 +15,7 @@ from importlib.metadata import version
 from io import StringIO
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator
+from xml.etree import ElementTree
 
 import polars as pl
 from jinja2 import Environment, BaseLoader, select_autoescape
@@ -31,7 +32,7 @@ class ReportItem:
 
     A report assigns an ID on insertion; one item can be reused in several
     reports without changing the original item. `content` is an already
-    aggregated table or a Matplotlib figure, not source dataframe rows.
+    aggregated table, a Matplotlib figure, or rendered SVG, not source rows.
     """
 
     kind: str
@@ -85,21 +86,93 @@ def _table_html(frame: pl.DataFrame) -> str:
     )
 
 
-def _figure_svg(figure: Figure, *, salt: str = '') -> str:
+
+def _as_chart_content(chart: object) -> Figure | str:
+    """Convert optional chart libraries to static report content."""
+    if isinstance(chart, Figure):
+        return chart
+
+    # identify installed plotting libraries without importing them
+    packages = {cls.__module__.partition('.')[0] for cls in type(chart).__mro__}
+    if 'plotnine' in packages and callable(getattr(chart, 'draw', None)):
+        figure = chart.draw()
+        if not isinstance(figure, Figure):
+            raise TypeError('plotnine draw() did not return a Matplotlib Figure')
+        return figure
+
+    if 'altair' in packages and callable(getattr(chart, 'save', None)):
+        output = StringIO()
+        try:
+            # let Altair select the correct Vega-Lite version and exporter
+            chart.save(output, format='svg')
+        except ImportError as exc:
+            raise ImportError(
+                'Altair SVG export requires vl-convert-python; '
+                'install it with: pip install vl-convert-python'
+            ) from exc
+        svg = output.getvalue()
+        _validate_svg(svg)
+        return svg
+
+    raise TypeError('add_chart expects a Matplotlib Figure, plotnine plot, or Altair chart')
+
+
+def _validate_svg(svg: str) -> None:
+    """Reject active content and external resources in generated Altair SVGs."""
+    if re.search(r'<!DOCTYPE|<!ENTITY', svg, re.IGNORECASE):
+        raise ValueError('SVG must not contain DTD declarations')
+    try:
+        root = ElementTree.fromstring(svg)
+    except ElementTree.ParseError as exc:
+        raise ValueError('Chart renderer did not produce valid SVG') from exc
+    if root.tag.rsplit('}', 1)[-1].lower() != 'svg':
+        raise ValueError('Chart renderer did not produce an SVG')
+
+    unsafe = {'script', 'foreignobject', 'iframe', 'object', 'embed',
+              'image', 'video', 'audio', 'animate', 'set'}
+    for element in root.iter():
+        name = element.tag.rsplit('}', 1)[-1].lower()
+        if name in unsafe:
+            raise ValueError(f'SVG contains an unsupported element: {name}')
+        values = list(element.attrib.values())
+        if name == 'style' and element.text:
+            values.append(element.text)
+        for attribute, value in element.attrib.items():
+            attr = attribute.rsplit('}', 1)[-1].lower()
+            if attr.startswith('on') or attr in {'src', 'formaction'}:
+                raise ValueError('SVG contains executable or external attributes')
+            if attr == 'href' and not value.startswith('#'):
+                raise ValueError('SVG references must be local')
+        for value in values:
+            if 'javascript:' in value.lower() or '@import' in value.lower():
+                raise ValueError('SVG contains active or external content')
+            for match in re.finditer(r'url\(\s*([^)]*?)\s*\)', value, re.IGNORECASE):
+                target = match.group(1).strip().strip('"\'')
+                if not target.startswith('#'):
+                    raise ValueError('SVG URL references must be local')
+
+
+def _figure_svg(figure: Figure | str, *, salt: str = '') -> str:
     """Namespace SVG identifiers for safe embedding in a shared HTML document.
 
     Matplotlib hashes some element identifiers but reuses glyph identifiers
     across separately rendered SVGs. Embedded charts therefore require
     per-chart identifiers and updated internal references.
     """
-    output = StringIO()
-    with rc_context({'svg.fonttype': 'path', 'svg.hashsalt': salt}):
-        figure.savefig(output, format='svg', bbox_inches='tight')
-    svg = output.getvalue()
-    start = svg.find('<svg')
-    if start < 0:
-        raise ValueError('Matplotlib did not produce an SVG')
-    svg = svg[start:]
+    if isinstance(figure, str):
+        svg = figure
+        _validate_svg(svg)
+        # omit XML declarations in HTML fragments
+        svg = svg[svg.find('<svg'):]
+    else:
+        output = StringIO()
+        with rc_context({'svg.fonttype': 'path', 'svg.hashsalt': salt}):
+            figure.savefig(output, format='svg', bbox_inches='tight')
+        svg = output.getvalue()
+        start = svg.find('<svg')
+        if start < 0:
+            raise ValueError('Matplotlib did not produce an SVG')
+        svg = svg[start:]
     identifiers = set(re.findall(r'\bid="([^"]+)"', svg))
     prefix = salt or 'polarstory'
     mapped = {value: f'{prefix}-{value}' for value in identifiers}
@@ -251,14 +324,18 @@ class Report:
         return self.add(ReportItem('table', title, data, caption, notes, id))
 
     def add_chart(
-            self, figure: Figure,
+            self, figure: object,
             *, title: str, caption: str | None = None, notes: str | None = None,
             id: str | None = None,
     ) -> ReportItem:
-        """Add a static Matplotlib figure to the current section.
-        
+        """Add a Matplotlib, plotnine, or Altair chart as static SVG.
+
+        Plotnine charts are converted to Matplotlib figures. Altair charts
+        use Altair's SVG exporter, which optionally needs vl-convert-python.
+        No JavaScript is included in the resulting HTML report.
+
         Args:
-            figure: Figure to render as embedded SVG.
+            figure: A Matplotlib Figure, plotnine plot, or Altair chart.
             title: Visible chart heading.
             caption: Optional caption.
             notes: Optional explanatory notes.
@@ -268,9 +345,8 @@ class Report:
             The added report item.
         
         """
-        if not isinstance(figure, Figure):
-            raise TypeError('add_chart expects a Matplotlib Figure')
-        return self.add(ReportItem('chart', title, figure, caption, notes, id))
+        content = _as_chart_content(figure)
+        return self.add(ReportItem('chart', title, content, caption, notes, id))
 
     def add_text(self, text: str, *, title: str = '', id: str | None = None) -> ReportItem:
         """Add a plain-text paragraph; HTML is escaped on rendering."""

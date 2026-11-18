@@ -1,0 +1,19 @@
+<style>{{ stylesheet | safe }}</style>
+<div class="polarstory-notebook" role="region" aria-label="polarstory preview">
+  <header class="polarstory-notebook-header">
+    <h3>{{ title }}</h3>
+  </header>
+  {% for section in sections %}
+  <section class="polarstory-notebook-section">
+    {% if sections | length > 1 %}<h4>{{ section.title }}</h4>{% endif %}
+    {% for entry in section['items'] %}
+    <article class="polarstory-notebook-item {{ entry.item.kind }}">
+      {% if entry.item.title %}<h4>{{ entry.item.title }}</h4>{% endif %}
+      {% if entry.item.caption %}<p class="polarstory-caption">{{ entry.item.caption }}</p>{% endif %}
+      {{ entry.html | safe }}
+      {% if entry.item.notes %}<p class="polarstory-notes">{{ entry.item.notes }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endfor %}
+</div>

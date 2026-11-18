@@ -21,6 +21,77 @@ if TYPE_CHECKING:
 View = Literal['all', 'summary', 'distribution', 'frequency', 'missingness', 'outliers']
 
 
+_LIGHT_THEME_CSS = """
+/* scoped to polarstory notebook previews and the explorer widget */
+.polarstory-notebook,
+.polarstory-explorer {
+  color: #243348 !important;
+  background: #fff !important;
+  color-scheme: light;
+}
+.polarstory-notebook {
+  padding: 1rem 1.25rem;
+  border: 1px solid #dce3eb;
+  border-radius: 6px;
+}
+.polarstory-notebook h3,
+.polarstory-notebook h4,
+.polarstory-notebook .polarstory-notebook-header,
+.polarstory-notebook .polarstory-notebook-item {
+  color: #243348 !important;
+}
+.polarstory-notebook .polarstory-caption,
+.polarstory-notebook .polarstory-notes {
+  color: #5c6877 !important;
+}
+.polarstory-notebook table,
+.polarstory-notebook th,
+.polarstory-notebook td {
+  color: #243348 !important;
+  border-color: #e2e7eb !important;
+}
+.polarstory-notebook table {
+  background: #fff !important;
+}
+.polarstory-notebook thead,
+.polarstory-notebook thead tr,
+.polarstory-notebook thead th {
+  background: #ecf2f7 !important;
+}
+.polarstory-notebook tbody tr,
+.polarstory-notebook tbody td {
+  background: #fff !important;
+}
+.polarstory-notebook tbody tr:nth-child(even),
+.polarstory-notebook tbody tr:nth-child(even) td {
+  background: #f9fbfc !important;
+}
+.polarstory-explorer {
+  padding: 1rem;
+  border: 1px solid #dce3eb;
+  border-radius: 6px;
+}
+.polarstory-explorer .widget-label,
+.polarstory-explorer label,
+.polarstory-explorer .widget-html-content,
+.polarstory-explorer h3 {
+  color: #243348 !important;
+}
+.polarstory-explorer input,
+.polarstory-explorer select,
+.polarstory-explorer textarea {
+  color: #243348 !important;
+  background: #fff !important;
+  color-scheme: light;
+  border-color: #b7c3d0 !important;
+}
+.polarstory-explorer .widget-output {
+  color: #243348 !important;
+  background: #fff !important;
+}
+"""
+
+
 class Explorer:
     """Select, preview and collect single-variable exploratory summaries.
 
@@ -386,6 +457,7 @@ class Explorer:
         diagnostic_preview = widgets.Button(description='Preview Diagnostic', icon='eye')
         diagnostic_add = widgets.Button(description='Add Diagnostic', icon='plus')
         self.widget = widgets.VBox([
+            widgets.HTML(value=f'<style>{_LIGHT_THEME_CSS}</style>'),
             widgets.HTML('<h3>PolarStory Variable Explorer</h3>'),
             search, variable, by, groups_picker, view,
             widgets.HBox([bins, top_n, denominator]),
@@ -393,6 +465,7 @@ class Explorer:
             widgets.HBox([diagnostics, diagnostic_preview, diagnostic_add]),
             status, output,
         ])
+        self.widget.add_class('polarstory-explorer')
 
         def search_changed(change):
             phrase = change['new'].casefold().strip()
@@ -488,7 +561,7 @@ class Explorer:
                     report = Report(variable.value)
                     for item in items:
                         report.add(item)
-                    display(HTML(report.to_html()))
+                    display(HTML(f'{report._to_notebook_html()}<style>{_LIGHT_THEME_CSS}</style>'))
                     status.value = f'<span>Previewing {escape(variable.value)}</span>'
                 except (TypeError, ValueError) as exc:
                     status.value = f'<span style="color:#a33">{escape(str(exc))}</span>'
@@ -520,7 +593,7 @@ class Explorer:
                     else:
                         report = Report(item.title)
                         report.add(item)
-                        display(HTML(report.to_html()))
+                        display(HTML(f'{report._to_notebook_html()}<style>{_LIGHT_THEME_CSS}</style>'))
                         status.value = f'<span>Previewing {escape(item.title)}</span>'
                 except (TypeError, ValueError) as exc:
                     status.value = f'<span style="color:#a33">{escape(str(exc))}</span>'

@@ -25,7 +25,7 @@ def show_report(report, *, browser: bool | None = None):
     if browser is not True and _in_notebook() and browser is None:
         from IPython.display import HTML, display
 
-        display(HTML(report.to_html()))
+        display(HTML(report._to_notebook_html()))
         return None
 
     # private temporary directory for preview contents
