@@ -11,6 +11,7 @@ from dataclasses import dataclass, field, replace
 from datetime import datetime
 from html import escape
 from importlib.resources import files
+from importlib.metadata import version
 from io import StringIO
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator
@@ -426,11 +427,8 @@ class Report:
         result._active = result.sections[0]
         return result
 
-    def to_html(self) -> str:
-        """Return a complete offline HTML document as a string."""
-        template_root = files('polarstory').joinpath('templates')
-        template = template_root.joinpath('report.html').read_text(encoding='utf8')
-        stylesheet = template_root.joinpath('style.css').read_text(encoding='utf8')
+    def _render_sections(self) -> list[dict]:
+        """Render report items once for browser and notebook output."""
         render_sections = []
         svg_index = 0
         for index, section in enumerate(self.sections):
@@ -451,13 +449,34 @@ class Report:
                     'id': f'section-{index}', 'title': section.title,
                     'items': rendered,
                 })
+        return render_sections
+
+    def to_html(self) -> str:
+        """Return a complete offline HTML document as a string."""
+        template_root = files('polarstory').joinpath('templates')
+        template = template_root.joinpath('report.html').read_text(encoding='utf8')
+        stylesheet = template_root.joinpath('style.css').read_text(encoding='utf8')
         environment = Environment(loader=BaseLoader(), autoescape=select_autoescape(['html']))
+        pl_version = version('polarstory')
         return environment.from_string(template).render(
             title=self.title,
             subtitle=self.subtitle,
-            sections=render_sections,
+            sections=self._render_sections(),
             stylesheet=stylesheet,
             generated_at=datetime.now().astimezone().isoformat(sep=' ', timespec='minutes'),
+            version=pl_version,
+        )
+
+    def _to_notebook_html(self) -> str:
+        """Render a theme-aware fragment without affecting the notebook page."""
+        template_root = files('polarstory').joinpath('templates')
+        template = template_root.joinpath('notebook.html').read_text(encoding='utf8')
+        stylesheet = template_root.joinpath('notebook.css').read_text(encoding='utf8')
+        environment = Environment(loader=BaseLoader(), autoescape=select_autoescape(['html']))
+        return environment.from_string(template).render(
+            title=self.title,
+            sections=self._render_sections(),
+            stylesheet=stylesheet,
         )
 
     def write_html(self, path: str | Path) -> Path:
