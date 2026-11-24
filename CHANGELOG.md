@@ -11,6 +11,7 @@ The versions below outline the intended release series. Release dates and versio
 
 - Support for great_tables via `add_great_table` + tests
 - Documentation and examples for `add_great_table` and `add_html`
+- Example python script and notebook (primarily for testing appearance across versions)
 
 ## [1.2.1] - 2026-11-17
 
