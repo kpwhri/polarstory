@@ -137,7 +137,8 @@ th {
     font-weight: 650;
 }
 
-th, td {
+.table-scroll th,
+.table-scroll td {
     padding: 8px 10px;
     border-bottom: 1px solid #e2e7eb;
     vertical-align: top;
@@ -167,11 +168,19 @@ footer {
     scroll-margin-top: 1rem;
 }
 
+.report-item.html {
+    overflow-x: auto;
+}
+
 @media (max-width: 700px) {
     .report {
         margin: 0;
         padding: 22px;
         box-shadow: none;
+    }
+
+    .report-item.html {
+        overflow: visible;
     }
 
     .toc ol {

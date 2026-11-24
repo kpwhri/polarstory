@@ -10,8 +10,8 @@ from copy import deepcopy
 from dataclasses import dataclass, field, replace
 from datetime import datetime
 from html import escape
-from importlib.resources import files
 from importlib.metadata import version
+from importlib.resources import files
 from io import StringIO
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator
@@ -24,6 +24,7 @@ from matplotlib.figure import Figure
 
 if TYPE_CHECKING:
     from polarstory.profile import Profile
+    from great_tables import GT
 
 
 @dataclass(frozen=True)
@@ -84,7 +85,6 @@ def _table_html(frame: pl.DataFrame) -> str:
     return '<div class="table-scroll"><table><thead><tr>' + headers + (
             '</tr></thead><tbody>' + ''.join(body) + '</tbody></table></div>'
     )
-
 
 
 def _as_chart_content(chart: object) -> Figure | str:
@@ -238,7 +238,7 @@ class Report:
             return tuple(self.add(component) for component in item.report_items())
         if not isinstance(item, ReportItem):
             raise TypeError('add expects a ReportItem or VariableProfile')
-        if item.kind not in ('table', 'chart', 'text'):
+        if item.kind not in ('table', 'chart', 'text', 'html'):
             raise ValueError(f'Unknown item kind: {item.kind}')
         if item.id is not None:
             if not item.id or not all(c.isalnum() or c in '_-' for c in item.id):
@@ -374,6 +374,47 @@ class Report:
             'table', title, frame, caption,
             'Descriptive statistics only; no hypothesis tests.', recipe=recipe,
         ))
+
+    def add_html(
+            self, html: str,
+            *, title: str = '',
+            caption: str | None = None,
+            notes: str | None = None,
+            id: str | None = None,
+    ) -> ReportItem:
+        """Add a html snippet.
+
+        Args:
+            html: html fragment to insert without modification
+            title: optional visible heading
+            caption: optional caption
+            notes: optional explanatory notes
+            id: optional stable component id
+        """
+        return self.add(ReportItem('html', title, html, caption, notes, id))
+
+    def add_great_table(
+            self, table: GT,
+            *, title: str = '',
+            caption: str | None = None,
+            notes: str | None = None,
+            id: str | None = None,
+    ) -> ReportItem:
+        """Add a Great Tables table to the report.
+
+        Args:
+            table: great_tables GT object
+            title: optional visible heading
+            caption: optional caption
+            notes: optional explanatory notes
+            id: optional stable component id
+
+        Notes:
+            The table is rendered using great_tables html export
+            The native table row limit does not apply
+
+        """
+        return self.add_html(table.as_raw_html(), title=title, caption=caption, notes=notes, id=id)
 
     def add_profile(self, data: object, *, title: str | None = None, **kwargs) -> Report:
         """Append sections from a Profile or a dataframe/path, without raw rows."""
@@ -517,6 +558,8 @@ class Report:
                     svg_index += 1
                 elif item.kind == 'text':
                     html = '<p>' + escape(item.content).replace('\n', '<br>') + '</p>'
+                elif item.kind == 'html':
+                    html = item.content
                 else:
                     raise ValueError(f'Unknown item kind: {item.kind}')
                 rendered.append({'item': item, 'html': html})

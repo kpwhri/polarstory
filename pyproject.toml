@@ -17,6 +17,15 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     'pytest>=8',
+    # great tables testing
+    'great-tables',
+    # polars output
+    'altair',
+    'plotnine',
+    'vl_convert-python',
+    # notebook
+    'ipywidgets>=8',
+    'ipython>=8',
 ]
 notebook = [
     'ipywidgets>=8',

@@ -7,6 +7,10 @@ The versions below outline the intended release series. Release dates and versio
 
 ## [Unreleased]
 
+### Added
+
+- Support for great_tables via `add_great_table` + tests
+
 ## [1.2.1] - 2026-11-17
 
 ### Added
