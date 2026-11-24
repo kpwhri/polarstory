@@ -7,7 +7,7 @@ The versions below outline the intended release series. Release dates and versio
 
 ## [Unreleased]
 
-## [1.2.2]
+## [1.2.2] - 2026-11-24
 
 ### Added
 
