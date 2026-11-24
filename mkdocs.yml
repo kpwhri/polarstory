@@ -14,7 +14,7 @@ nav:
   - Linux File Manager Integration: guides/linux.md
   - Saved Report Recipes: guides/recipes.md
   - Compare Datasets: guides/comparing.md
-- Healthcare Research Examples:
+- Examples:
   - Cohort Overview: examples/cohort.md
   - Cohort Characteristics (Table 1): examples/table1.md
   - Missing Data Investigation: examples/missingness.md

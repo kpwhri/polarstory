@@ -36,4 +36,4 @@ The actions run without a Terminal window. Failures produce a MacOS alert and ar
 ~/Library/Logs/polarstory/integration.log
 ```
 
-For more detail, run the corresponding [CLI command](cli.md) in Terminal. For configuration options, see the [CLI reference](../reference/cli.md#configuration).
+For more detail, run the corresponding [CLI command](cli.md) in Terminal. For configuration options, see the [CLI reference](../reference/cli.md#configuration-example).

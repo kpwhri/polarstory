@@ -54,7 +54,7 @@ For setup instructions, see the [macOS Finder guide](../guides/macos.md) or [Lin
 
 `--config`, `-o/--output`, `--open`, `--force`, and `--progress`.
 
-## Configuration example
+## Configuration Example
 
 ```toml
 [profile]
@@ -72,7 +72,7 @@ output_directory = 'reports'
 Save as `polarstory.toml` or provide `--config`. Explicit CLI flags take precedence over TOML values, which take
 precedence over built-in defaults. See [CLI usage](../guides/cli.md).
 
-## Dataset comparison
+## Dataset Comparison
 
 ```powershell
 polarstory compare older.parquet newer.parquet --open

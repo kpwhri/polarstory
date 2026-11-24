@@ -13,7 +13,7 @@ for a project report. Its reports use ordinary html tables and embedded SVG figu
 | Understand one variable             | [Explore variables](guides/explorer.md) |
 | Assemble selected results           | [Build a report](guides/reports.md)     |
 | Profile a file without Python code  | [CLI and integrations](guides/cli.md)   |
-| Review healthcare research examples | [Cohort overview](examples/cohort.md)   |
+| Review Examples | [Cohort overview](examples/cohort.md)   |
 | Find a function or parameter        | [API reference](reference/index.md)     |
 
 ## Three core workflows

@@ -1,4 +1,4 @@
-# Compare healthcare research extracts
+# Compare Extracts
 
 This example uses synthetic encounter-level data to demonstrate changes in
 age distribution, encounter type, and insurance coding between extracts.

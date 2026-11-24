@@ -53,4 +53,4 @@ The actions do not open a terminal. Failures are logged at:
 
 If `XDG_STATE_HOME` is set, the log is stored under `$XDG_STATE_HOME/polarstory/` instead. A graphical error dialog appears when **Zenity** or **KDialog** is available; otherwise, inspect the log or run the corresponding [CLI command](cli.md) in a terminal.
 
-For configuration options, see the [CLI reference](../reference/cli.md#configuration).
+For configuration options, see the [CLI reference](../reference/cli.md#configuration-example).
